@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>LevelOverlay - 傾き幾何学アート</title>
+  <title>LevelOverlay1 水準器拡張アート</title>
   <style>
     :root {
       --accent: #58a6ff;
@@ -11,7 +11,7 @@
       --warning: #d29922;
       --danger: #f85149;
       --bg: #0b0f17;
-      --panel-bg: rgba(22, 27, 34, 0.75);
+      --panel-bg: rgba(22, 27, 34, 0.8);
       --panel-border: rgba(255, 255, 255, 0.15);
     }
 
@@ -44,7 +44,6 @@
       align-items: center;
     }
 
-    /* メインキャンバス */
     #canvas-wrapper {
       position: relative;
       width: 100%;
@@ -52,7 +51,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      cursor: crosshair;
     }
 
     canvas {
@@ -63,49 +61,7 @@
       touch-action: none;
     }
 
-    /* カメラ映像（撮影モーダル用） */
-    #camera-modal {
-      position: absolute;
-      inset: 0;
-      background: #000;
-      z-index: 150;
-      display: none;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px;
-    }
-
-    #camera-preview {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    .camera-ui {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .shutter-btn {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: white;
-      border: 5px solid rgba(255,255,255,0.4);
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
-    .shutter-btn:active { transform: scale(0.92); }
-
-    /* 上部ヘッダー */
+    /* ヘッダー */
     header {
       position: absolute;
       top: 0;
@@ -116,21 +72,21 @@
       justify-content: space-between;
       align-items: center;
       z-index: 20;
-      background: linear-gradient(180deg, rgba(11,15,23,0.85) 0%, rgba(11,15,23,0) 100%);
+      background: linear-gradient(180deg, rgba(11,15,23,0.9) 0%, rgba(11,15,23,0) 100%);
       pointer-events: none;
     }
     header * { pointer-events: auto; }
 
     .brand {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 700;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
       color: var(--accent);
       text-shadow: 0 2px 8px rgba(0,0,0,0.8);
     }
 
     .status-badge {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       padding: 6px 12px;
       border-radius: 20px;
       background: var(--panel-bg);
@@ -138,23 +94,20 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--panel-border);
       font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
-    /* ティントカラーパレット */
+    /* ティントパレット */
     #palette-bar {
       position: absolute;
-      top: 70px;
+      top: 68px;
       display: flex;
-      gap: 8px;
+      gap: 10px;
       z-index: 20;
       background: var(--panel-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 30px;
       border: 1px solid var(--panel-border);
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
@@ -171,10 +124,10 @@
     .color-chip.selected {
       transform: scale(1.25);
       border-color: #fff;
-      box-shadow: 0 0 10px rgba(255,255,255,0.6);
+      box-shadow: 0 0 8px rgba(255,255,255,0.6);
     }
 
-    /* 下部コントロールフッター */
+    /* フッターUI */
     footer {
       position: absolute;
       bottom: 0;
@@ -186,7 +139,7 @@
       gap: 10px;
       align-items: center;
       z-index: 20;
-      background: linear-gradient(0deg, rgba(11,15,23,0.92) 0%, rgba(11,15,23,0) 100%);
+      background: linear-gradient(0deg, rgba(11,15,23,0.95) 0%, rgba(11,15,23,0) 100%);
       pointer-events: none;
     }
     footer * { pointer-events: auto; }
@@ -199,61 +152,92 @@
     }
 
     .btn {
-      padding: 10px 16px;
+      padding: 10px 14px;
       border-radius: 20px;
       border: 1px solid var(--panel-border);
       background: var(--panel-bg);
       color: #f0f6fc;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-      transition: transform 0.1s, background-color 0.2s;
+      transition: opacity 0.2s, transform 0.1s;
     }
-    .btn:active { transform: scale(0.94); background: rgba(255,255,255,0.2); }
+    .btn:active { transform: scale(0.95); background: rgba(255,255,255,0.25); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
     .btn-primary { background: #238636; border-color: #2ea043; color: white; }
-    .btn-primary:active { background: #2ea043; }
     .btn-danger { background: rgba(248, 81, 73, 0.2); border-color: var(--danger); color: #ff7b72; }
 
-    /* トーストメッセージ */
+    /* カメラ撮影モーダル */
+    #camera-modal {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      z-index: 150;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+    }
+    #camera-preview {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .camera-ui {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .shutter-btn {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: white;
+      border: 5px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+    }
+
+    /* トースト */
     #toast {
       position: absolute;
-      top: 120px;
+      top: 115px;
       background: rgba(0,0,0,0.85);
       border: 1px solid var(--panel-border);
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: 20px;
       font-size: 0.8rem;
       color: #fff;
       display: none;
-      z-index: 90;
+      z-index: 120;
       backdrop-filter: blur(8px);
       pointer-events: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
-    /* 許可ダイアログ */
-    #permission-modal {
+    /* スタート＆センサー許可モーダル */
+    #start-modal {
       position: absolute;
       inset: 0;
-      background: rgba(11, 15, 23, 0.9);
+      background: rgba(11, 15, 23, 0.95);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      z-index: 200;
-      display: none;
+      z-index: 300;
+      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 32px;
+      padding: 30px;
       text-align: center;
     }
-    #permission-modal h2 { margin-bottom: 12px; color: var(--accent); }
-    #permission-modal p { font-size: 0.9rem; color: #8b949e; line-height: 1.6; margin-bottom: 24px; }
+    #start-modal h2 { margin-bottom: 12px; color: var(--accent); font-size: 1.4rem; }
+    #start-modal p { font-size: 0.9rem; color: #8b949e; line-height: 1.6; margin-bottom: 24px; max-width: 320px; }
 
     input[type="file"] { display: none; }
   </style>
@@ -262,18 +246,18 @@
 
   <div id="app-container">
     <header>
-      <div class="brand">LevelOverlay</div>
+      <div class="brand">LevelOverlay1</div>
       <div id="status" class="status-badge">1. 角度を合わせてタップ</div>
     </header>
 
-    <!-- ティントカラー選択バー -->
+    <!-- ティントカラー選択 -->
     <div id="palette-bar">
-      <div class="color-chip selected" data-color="transparent" style="background: repeating-linear-gradient(45deg, #444, #444 4px, #666 4px, #666 8px);" title="原色そのまま"></div>
-      <div class="color-chip" data-color="rgba(255, 59, 48, 0.35)" style="background: #ff3b30;" title="レッド"></div>
-      <div class="color-chip" data-color="rgba(88, 166, 255, 0.35)" style="background: #58a6ff;" title="ブルー"></div>
-      <div class="color-chip" data-color="rgba(63, 185, 80, 0.35)" style="background: #3fb950;" title="グリーン"></div>
-      <div class="color-chip" data-color="rgba(210, 153, 34, 0.35)" style="background: #d29922;" title="アンバー"></div>
-      <div class="color-chip" data-color="rgba(187, 128, 255, 0.35)" style="background: #bc8cff;" title="パープル"></div>
+      <div class="color-chip selected" data-color="transparent" style="background: repeating-linear-gradient(45deg, #333, #333 4px, #555 4px, #555 8px);" title="原色"></div>
+      <div class="color-chip" data-color="rgba(255, 59, 48, 0.3)" style="background: #ff3b30;" title="レッド"></div>
+      <div class="color-chip" data-color="rgba(88, 166, 255, 0.3)" style="background: #58a6ff;" title="ブルー"></div>
+      <div class="color-chip" data-color="rgba(63, 185, 80, 0.3)" style="background: #3fb950;" title="グリーン"></div>
+      <div class="color-chip" data-color="rgba(210, 153, 34, 0.3)" style="background: #d29922;" title="アンバー"></div>
+      <div class="color-chip" data-color="rgba(187, 128, 255, 0.3)" style="background: #bc8cff;" title="パープル"></div>
     </div>
 
     <div id="canvas-wrapper">
@@ -283,13 +267,13 @@
     <footer>
       <div class="control-row">
         <button class="btn" onclick="openCamera()">📷 AR撮影</button>
-        <button class="btn" onclick="document.getElementById('fileInput').click()">🖼️ 画像選択</button>
-        <button class="btn" id="undoBtn" onclick="undo()">↩️ 戻る</button>
-        <button class="btn btn-primary" onclick="saveImage()">💾 保存</button>
+        <button class="btn" onclick="document.getElementById('fileInput').click()">🖼️ 写真選択</button>
+        <button class="btn" id="undoBtn" onclick="undo()" disabled>↩️ 戻る</button>
+        <button class="btn" id="redoBtn" onclick="redo()" disabled>↪️ 進む</button>
       </div>
       <div class="control-row">
-        <button class="btn" onclick="requestSensorPermission(true)">🧭 センサー再許可</button>
-        <button class="btn btn-danger" onclick="resetCanvas()">🔄 最初から</button>
+        <button class="btn btn-primary" onclick="saveImage()">💾 画像を保存</button>
+        <button class="btn btn-danger" onclick="resetCanvas()">🔄 リセット</button>
       </div>
       <input type="file" id="fileInput" accept="image/*" onchange="loadImage(event)">
     </footer>
@@ -298,180 +282,245 @@
     <div id="camera-modal">
       <video id="camera-preview" autoplay playsinline muted></video>
       <div class="camera-ui">
-        <button class="btn" onclick="closeCamera()">✕ キャンセル</button>
+        <button class="btn" onclick="closeCamera()">✕ 閉じる</button>
       </div>
-      <div class="camera-ui" style="justify-content: center; margin-bottom: 24px;">
+      <div class="camera-ui" style="justify-content: center; margin-bottom: 30px;">
         <button class="shutter-btn" onclick="captureCamera()"></button>
       </div>
     </div>
 
-    <!-- トースト表示 -->
+    <!-- トースト通知 -->
     <div id="toast"></div>
 
-    <!-- センサーパーミッションモーダル (iOS用) -->
-    <div id="permission-modal">
-      <h2>傾きセンサーの許可</h2>
-      <p>iPhoneの水準器のように、スマートフォンの傾きでリアルタイムに画像をスライド・切り抜きします。ジャイロセンサーへのアクセスを許可してください。<br>（拒否されても下の「センサー再許可」ボタンからいつでも再設定可能です）</p>
-      <button class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;" onclick="requestSensorPermission(false)">センサーを有効化</button>
+    <!-- 開始モーダル（iOS / Android 共通） -->
+    <div id="start-modal">
+      <h2>LevelOverlay1</h2>
+      <p>スマートフォンの傾きでアートを作成します。<br>下のボタンを押して開始してください。</p>
+      <button class="btn btn-primary" style="padding: 14px 32px; font-size: 1rem; border-radius: 28px;" onclick="startApp()">タップしてスタート</button>
     </div>
   </div>
 
   <script>
     // --- 状態管理 ---
-    // モード: 'AIM' (水準器の照準合わせ) -> 'GLIDE' (半透明切り抜きが滑る)
-    let mode = 'AIM';
+    let mode = 'AIM'; // 'AIM' (水準線選択) -> 'GLIDE' (半透明スライド)
 
     const canvas = document.getElementById('artCanvas');
     const ctx = canvas.getContext('2d');
     const statusBadge = document.getElementById('status');
     const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
 
-    // オフスクリーンのベース画像用キャンバス（ここにどんどん重ねていく）
+    // オフスクリーンの原画ベースキャンバス
     let baseCanvas = document.createElement('canvas');
     let baseCtx = baseCanvas.getContext('2d');
 
-    // アンドゥ（履歴）スタック
+    // 履歴スタック（Undo / Redo）
     let historyStack = [];
-    const MAX_HISTORY = 10;
+    let historyIndex = -1;
+    const MAX_HISTORY = 20;
 
-    // センサー値
-    let rawRoll = 0;   // 左右の傾き (-90 ~ 90)
-    let rawPitch = 0;  // 前後の傾き (-90 ~ 90)
-    
-    // スムーズな補間表示用（物理慣性）
+    // センサー角度（生値とスムージング値）
+    let rawRoll = 0;       // 左右傾き（度）
+    let rawPitch = 0;      // 直立(90度)を基準0とした前後傾き（度）
     let smoothRoll = 0;
     let smoothPitch = 0;
+    let isUpsideDown = false; // スマホの上下が逆さまかどうか
 
-    // タップ時の切り抜き基準値
+    // 固定スナップショット値
     let cutRoll = 0;
     let cutPitch = 0;
+    let cutUpsideDown = false;
 
-    // 現在選択されているティントカラー
+    // 半透明度 (以前の0.65から引き上げて約0.78に設定)
+    const OVERLAY_OPACITY = 0.78;
     let selectedTint = 'transparent';
 
-    // 描画レイアウト計算用
+    // 描画領域サイズ
     let renderW = 0, renderH = 0, renderX = 0, renderY = 0;
-
-    // マウス・タッチ操作用フォールバック
-    let isDragging = false;
-    let lastPointerX = 0, lastPointerY = 0;
-    let hasTouchMoved = false;
 
     // カメラ関連
     let videoStream = null;
 
-    // --- トースト表示 ---
+    // マウス/ドラッグでのフォールバック
+    let isDragging = false;
+    let startPointerX = 0, startPointerY = 0;
+    let hasPointerMoved = false;
+
+    // --- トースト通知 ---
     let toastTimer;
-    function showToast(text) {
-      const toast = document.getElementById('toast');
-      toast.textContent = text;
-      toast.style.display = 'block';
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 2500);
+      toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2200);
     }
 
-    // --- デフォルトのアート画像生成 ---
-    function initDefaultImage() {
+    // --- アプリ開始 ＆ センサー初期化 ---
+    async function startApp() {
+      // iOS向けのパーミッション要求
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        try {
+          const resp = await DeviceOrientationEvent.requestPermission();
+          if (resp === 'granted') {
+            bindSensors();
+          } else {
+            showToast('センサーが拒否されました（ドラッグ操作で代用可）');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      } else {
+        // Android / PC
+        bindSensors();
+      }
+
+      document.getElementById('start-modal').style.display = 'none';
+      initDefaultArt();
+    }
+
+    // 重力加速度センサー（ジンバルロックが原理的に起きず、逆さまも正確に検知可能）
+    function bindSensors() {
+      if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', handleMotion);
+      }
+      // フォールバックとしてOrientationも受信
+      window.addEventListener('deviceorientation', handleOrientationFallback);
+    }
+
+    let motionDetected = false;
+    function handleMotion(e) {
+      const g = e.accelerationIncludingGravity;
+      if (!g || g.x === null) return;
+      motionDetected = true;
+
+      // g.x: 左右, g.y: 上下, g.z: 前後
+      const gx = g.x;
+      const gy = g.y;
+      const gz = g.z;
+
+      // スマホの上端が地面に向いているか（逆さま判定）
+      isUpsideDown = (gy > 1.5);
+
+      // 画面平面上の回転角（ロール）：atan2で360度シームレスに計算
+      let deg = Math.atan2(gx, -gy) * (180 / Math.PI);
+      
+      // 逆さま時は基準を反転
+      if (isUpsideDown) {
+        deg = Math.atan2(-gx, gy) * (180 / Math.PI);
+      }
+      rawRoll = deg;
+
+      // 直立（画面が垂直、地平と90度）のとき gz=0 付近になる
+      // 前後の傾き（ピッチ）：直立を0度とする
+      const plane = Math.sqrt(gx * gx + gy * gy);
+      const pitchDeg = Math.atan2(gz, plane) * (180 / Math.PI);
+      rawPitch = pitchDeg;
+    }
+
+    function handleOrientationFallback(e) {
+      if (motionDetected) return; // Motionが使える場合はスキップ
+      if (e.gamma !== null && e.beta !== null) {
+        rawRoll = e.gamma;
+        // 直立（地平と90度）を基準0度にする補正
+        rawPitch = e.beta - 90;
+        isUpsideDown = Math.abs(e.beta) > 135;
+      }
+    }
+
+    // --- デフォルトアート画像生成 ---
+    function initDefaultArt() {
       baseCanvas.width = 1080;
       baseCanvas.height = 1440;
-      
-      const grad = baseCtx.createLinearGradient(0, 0, 1080, 1440);
-      grad.addColorStop(0, '#0f2027');
-      grad.addColorStop(0.5, '#203a43');
-      grad.addColorStop(1, '#2c5364');
-      baseCtx.fillStyle = grad;
+
+      const g = baseCtx.createLinearGradient(0, 0, 1080, 1440);
+      g.addColorStop(0, '#111e38');
+      g.addColorStop(0.5, '#1d3557');
+      g.addColorStop(1, '#0d1b2a');
+      baseCtx.fillStyle = g;
       baseCtx.fillRect(0, 0, 1080, 1440);
 
-      // 装飾幾何学
-      baseCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-      baseCtx.lineWidth = 12;
-      baseCtx.strokeRect(140, 200, 800, 1040);
+      // サンプル図形
+      baseCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      baseCtx.lineWidth = 14;
+      baseCtx.strokeRect(120, 160, 840, 1120);
 
-      baseCtx.fillStyle = 'rgba(88, 166, 255, 0.25)';
+      baseCtx.fillStyle = 'rgba(88, 166, 255, 0.3)';
       baseCtx.beginPath();
-      baseCtx.arc(540, 720, 280, 0, Math.PI * 2);
+      baseCtx.arc(540, 720, 260, 0, Math.PI * 2);
       baseCtx.fill();
 
       baseCtx.fillStyle = '#ffffff';
-      baseCtx.font = 'bold 54px -apple-system, sans-serif';
+      baseCtx.font = 'bold 50px sans-serif';
       baseCtx.textAlign = 'center';
-      baseCtx.fillText('LevelOverlay', 540, 700);
-      baseCtx.font = '32px -apple-system, sans-serif';
+      baseCtx.fillText('LevelOverlay1', 540, 700);
+      baseCtx.font = '28px sans-serif';
       baseCtx.fillStyle = '#8b949e';
-      baseCtx.fillText('タップして幾何学アートを作成', 540, 760);
+      baseCtx.fillText('タップして切り抜き＆スライド', 540, 755);
 
+      historyStack = [];
+      historyIndex = -1;
       pushHistory();
       resizeCanvas();
     }
 
-    // --- 履歴スタック (Undo) 管理 ---
+    // --- 履歴管理（Undo / Redo） ---
     function pushHistory() {
-      if (historyStack.length >= MAX_HISTORY) {
-        historyStack.shift();
+      // 現在インデックスより先の履歴（Redo分）を切り捨てる
+      if (historyIndex < historyStack.length - 1) {
+        historyStack = historyStack.slice(0, historyIndex + 1);
       }
       const snapshot = document.createElement('canvas');
       snapshot.width = baseCanvas.width;
       snapshot.height = baseCanvas.height;
       snapshot.getContext('2d').drawImage(baseCanvas, 0, 0);
+
       historyStack.push(snapshot);
-      updateUndoButton();
+      if (historyStack.length > MAX_HISTORY) {
+        historyStack.shift();
+      } else {
+        historyIndex++;
+      }
+      updateHistoryButtons();
     }
 
     function undo() {
-      if (historyStack.length <= 1) {
-        showToast('これ以上戻れません');
-        return;
+      if (historyIndex > 0) {
+        historyIndex--;
+        restoreHistory(historyIndex);
+        showToast('1つ戻しました');
       }
-      historyStack.pop(); // 現在の状態を破棄
-      const previous = historyStack[historyStack.length - 1];
-      baseCanvas.width = previous.width;
-      baseCanvas.height = previous.height;
-      baseCtx.drawImage(previous, 0, 0);
-      
-      mode = 'AIM';
-      updateStatusBadge();
-      updateUndoButton();
-      showToast('1つ前の状態に戻しました');
     }
 
-    function updateUndoButton() {
-      undoBtn.style.opacity = historyStack.length > 1 ? '1' : '0.5';
+    function redo() {
+      if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        restoreHistory(historyIndex);
+        showToast('1つ進めました');
+      }
+    }
+
+    function restoreHistory(idx) {
+      const snap = historyStack[idx];
+      baseCanvas.width = snap.width;
+      baseCanvas.height = snap.height;
+      baseCtx.clearRect(0, 0, baseCanvas.width, baseCanvas.height);
+      baseCtx.drawImage(snap, 0, 0);
+      mode = 'AIM';
+      updateStatusBadge();
+      updateHistoryButtons();
+    }
+
+    function updateHistoryButtons() {
+      undoBtn.disabled = (historyIndex <= 0);
+      redoBtn.disabled = (historyIndex >= historyStack.length - 1);
     }
 
     function resetCanvas() {
-      initDefaultImage();
+      initDefaultArt();
       mode = 'AIM';
       updateStatusBadge();
-      showToast('キャンバスをリセットしました');
-    }
-
-    // --- センサー処理 (iOS / Android 双方対応) ---
-    function requestSensorPermission(manualClick = false) {
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-          .then(state => {
-            if (state === 'granted') {
-              window.addEventListener('deviceorientation', handleOrientation);
-              document.getElementById('permission-modal').style.display = 'none';
-              showToast('センサーを有効化しました');
-            } else {
-              showToast('センサーが拒否されました。ドラッグでも操作可能です。');
-            }
-          })
-          .catch(err => {
-            if (manualClick) showToast('センサー初期化エラー: ' + err.message);
-          });
-      } else {
-        // Android / PC
-        window.addEventListener('deviceorientation', handleOrientation);
-        document.getElementById('permission-modal').style.display = 'none';
-        if (manualClick) showToast('センサーを有効化しました');
-      }
-    }
-
-    function handleOrientation(e) {
-      if (e.gamma !== null) rawRoll = e.gamma;        // 左右傾き [-90, 90]
-      if (e.beta !== null) rawPitch = e.beta - 45;    // 自然なスマホ持ち角(約45度)を基準0とする
+      showToast('リセットしました');
     }
 
     // --- ファイル読み込み ---
@@ -479,27 +528,28 @@
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (event) => {
-        const tempImg = new Image();
-        tempImg.onload = () => {
-          baseCanvas.width = tempImg.naturalWidth;
-          baseCanvas.height = tempImg.naturalHeight;
+      reader.onload = (evt) => {
+        const img = new Image();
+        img.onload = () => {
+          baseCanvas.width = img.naturalWidth;
+          baseCanvas.height = img.naturalHeight;
           baseCtx.clearRect(0, 0, baseCanvas.width, baseCanvas.height);
-          baseCtx.drawImage(tempImg, 0, 0);
+          baseCtx.drawImage(img, 0, 0);
           historyStack = [];
+          historyIndex = -1;
           pushHistory();
           resizeCanvas();
           mode = 'AIM';
           updateStatusBadge();
-          showToast('画像を読み込みました');
+          showToast('写真を読み込みました');
         };
-        tempImg.src = event.target.result;
+        img.src = evt.target.result;
       };
       reader.readAsDataURL(file);
-      e.target.value = ''; // 同じファイル再選択用
+      e.target.value = '';
     }
 
-    // --- AR/カメラ機能 ---
+    // --- カメラ（AR）撮影 ---
     async function openCamera() {
       const modal = document.getElementById('camera-modal');
       const video = document.getElementById('camera-preview');
@@ -510,13 +560,13 @@
         video.srcObject = videoStream;
         modal.style.display = 'flex';
       } catch (err) {
-        alert('カメラへのアクセスに失敗しました: ' + err.message);
+        alert('カメラの起動に失敗しました: ' + err.message);
       }
     }
 
     function closeCamera() {
       if (videoStream) {
-        videoStream.getTracks().forEach(track => track.stop());
+        videoStream.getTracks().forEach(t => t.stop());
         videoStream = null;
       }
       document.getElementById('camera-modal').style.display = 'none';
@@ -532,14 +582,15 @@
 
       closeCamera();
       historyStack = [];
+      historyIndex = -1;
       pushHistory();
       resizeCanvas();
       mode = 'AIM';
       updateStatusBadge();
-      showToast('カメラから取り込みました');
+      showToast('撮影して取り込みました');
     }
 
-    // --- レスポンシブキャンバスレイアウト ---
+    // --- レスポンシブキャンバス ---
     function resizeCanvas() {
       const wrapper = document.getElementById('canvas-wrapper');
       const maxW = wrapper.clientWidth - 24;
@@ -564,46 +615,46 @@
     }
     window.addEventListener('resize', resizeCanvas);
 
-    // --- タップ & スワイプ操作 ---
+    // --- タップ ＆ ドラッグ操作 ---
     const wrapper = document.getElementById('canvas-wrapper');
 
     wrapper.addEventListener('pointerdown', (e) => {
       isDragging = true;
-      hasTouchMoved = false;
-      lastPointerX = e.clientX;
-      lastPointerY = e.clientY;
+      hasPointerMoved = false;
+      startPointerX = e.clientX;
+      startPointerY = e.clientY;
     });
 
     wrapper.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
-      const dx = e.clientX - lastPointerX;
-      const dy = e.clientY - lastPointerY;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
-        hasTouchMoved = true;
+      const dx = e.clientX - startPointerX;
+      const dy = e.clientY - startPointerY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+        hasPointerMoved = true;
       }
-      // PC等ジャイロがない環境でもドラッグで傾きを模倣可能
-      rawRoll += dx * 0.3;
-      rawPitch += dy * 0.3;
-      lastPointerX = e.clientX;
-      lastPointerY = e.clientY;
+      // PC等センサー非対応環境でのドラッグ
+      rawRoll += dx * 0.2;
+      rawPitch += dy * 0.2;
+      startPointerX = e.clientX;
+      startPointerY = e.clientY;
     });
 
     wrapper.addEventListener('pointerup', () => {
       isDragging = false;
-      // スワイプによる回転ではなく、タップ操作であると判定
       handleTap();
     });
 
     function handleTap() {
       if (mode === 'AIM') {
-        // 1. 現在の角度と位置を記録して切り抜き開始
+        // 現在の角度と上下状態を固定してスライディング開始
         cutRoll = smoothRoll;
         cutPitch = smoothPitch;
+        cutUpsideDown = isUpsideDown;
         mode = 'GLIDE';
         updateStatusBadge();
       } else if (mode === 'GLIDE') {
-        // 2. 現在滑っている位置・角度・色でベースキャンバスに焼き付ける（Bake）
-        bakeCurrentOverlay();
+        // 現在の浮遊状態を原画に焼き付ける（Bake）
+        bakeOverlay();
         pushHistory();
         mode = 'AIM';
         updateStatusBadge();
@@ -613,19 +664,19 @@
 
     function updateStatusBadge() {
       if (mode === 'AIM') {
-        statusBadge.innerHTML = `<span>1. 角度を合わせてタップ</span>`;
+        statusBadge.textContent = '1. 角度を合わせてタップ';
         statusBadge.style.color = '#58a6ff';
         statusBadge.style.borderColor = 'rgba(88, 166, 255, 0.4)';
       } else {
-        statusBadge.innerHTML = `<span>2. 傾けてずらしタップで貼付</span>`;
+        statusBadge.textContent = '2. 傾けてずらしタップで貼付';
         statusBadge.style.color = '#d29922';
         statusBadge.style.borderColor = 'rgba(210, 153, 34, 0.4)';
       }
     }
 
-    // --- ティントカラーパレット設定 ---
+    // カラーパレット
     document.querySelectorAll('.color-chip').forEach(chip => {
-      chip.addEventListener('click', (e) => {
+      chip.addEventListener('click', () => {
         document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
         chip.classList.add('selected');
         selectedTint = chip.getAttribute('data-color');
@@ -634,41 +685,45 @@
 
     // --- メインレンダリングループ ---
     function render() {
-      // 傾きのスムージング（慣性を効かせた滑らかな動き）
-      smoothRoll += (rawRoll - smoothRoll) * 0.15;
-      smoothPitch += (rawPitch - smoothPitch) * 0.15;
+      // 速度を60%程度に落としたマイルドで滑らかな補間（大雑把で狙いやすい動き）
+      const SMOOTHING = 0.08;
+      smoothRoll += (rawRoll - smoothRoll) * SMOOTHING;
+      smoothPitch += (rawPitch - smoothPitch) * SMOOTHING;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (baseCanvas.width > 0) {
-        // 1. ベースキャンバスの描画
+        // 1. ベース原画の描画
         ctx.drawImage(baseCanvas, renderX, renderY, renderW, renderH);
 
-        // 2. モード別の描画
+        // 2. モード別描画
         if (mode === 'AIM') {
-          drawLevelGuide(smoothRoll, smoothPitch);
+          drawLevelLine(smoothRoll, smoothPitch);
         } else if (mode === 'GLIDE') {
-          drawGlidingFragment(smoothRoll, smoothPitch);
+          drawGlidingLayer(smoothRoll, smoothPitch);
         }
       }
 
       requestAnimationFrame(render);
     }
 
-    // 水準器ライン（照準）の描画
-    function drawLevelGuide(roll, pitch) {
+    // 赤い水準器ラインの描画（動きの感度を60%にスケーリング）
+    function drawLevelLine(roll, pitch) {
       ctx.save();
       const cx = renderX + renderW / 2;
       const cy = renderY + renderH / 2;
-      const yOffset = (pitch / 45) * (renderH * 0.45);
+
+      // 地平90度直立(pitch=0)で画面ど真ん中。ピッチ移動幅を60%にマイルド化
+      const yOffset = (pitch / 45) * (renderH * 0.45) * 0.6;
 
       ctx.translate(cx, cy);
+      // ロール回転も適度に安定化
       ctx.rotate((roll * Math.PI) / 180);
 
       // 水平ライン
       ctx.strokeStyle = '#ff3b30';
       ctx.lineWidth = 3;
-      ctx.shadowColor = 'rgba(255, 59, 48, 0.6)';
+      ctx.shadowColor = 'rgba(255, 59, 48, 0.7)';
       ctx.shadowBlur = 8;
 
       ctx.beginPath();
@@ -676,14 +731,12 @@
       ctx.lineTo(renderW * 1.5, yOffset);
       ctx.stroke();
 
-      // 中央マーカー
+      // 中央ドット＆角度表示
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.arc(0, yOffset, 6, 0, Math.PI * 2);
+      ctx.arc(0, yOffset, 5, 0, Math.PI * 2);
       ctx.fill();
 
-      // 角度数値表示
-      ctx.fillStyle = '#ffffff';
       ctx.font = '12px monospace';
       ctx.textAlign = 'center';
       ctx.fillText(`${Math.round(roll)}°`, 0, yOffset - 12);
@@ -691,59 +744,65 @@
       ctx.restore();
     }
 
-    // 滑り動く半透明断片の描画
-    function drawGlidingFragment(currRoll, currPitch) {
+    // 滑り動く半透明切り抜きレイヤーの描画
+    function drawGlidingLayer(currRoll, currPitch) {
       ctx.save();
-
       const cx = renderX + renderW / 2;
       const cy = renderY + renderH / 2;
-      
-      // 初期の切断ラインの位置
-      const initialCutY = (cutPitch / 45) * (renderH * 0.45);
 
-      // 傾き差分によるスライド量
-      const diffRoll = currRoll - cutRoll;
-      const diffPitch = currPitch - cutPitch;
-      const shiftX = diffRoll * 4;
-      const shiftY = diffPitch * 4;
-      const dynamicRotate = (diffRoll * 0.5 * Math.PI) / 180;
+      const initialCutY = (cutPitch / 45) * (renderH * 0.45) * 0.6;
 
-      // 1. クリップ領域の作成（元の画像の上半分領域を切り抜く）
+      // 傾き差分によるスライディング移動量（60%マイルド化）
+      const diffRoll = (currRoll - cutRoll) * 0.6;
+      const diffPitch = (currPitch - cutPitch) * 0.6;
+      const shiftX = diffRoll * 3.5;
+      const shiftY = diffPitch * 3.5;
+      const dynamicRotate = (diffRoll * 0.4 * Math.PI) / 180;
+
+      // 1. クリップ領域（上下逆さまの場合は画像の下半分を切り抜き）
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate((cutRoll * Math.PI) / 180);
 
       ctx.beginPath();
-      // 上半分を包括するポリゴン
-      ctx.moveTo(-renderW * 2, -renderH * 2);
-      ctx.lineTo(renderW * 2, -renderH * 2);
-      ctx.lineTo(renderW * 2, initialCutY);
-      ctx.lineTo(-renderW * 2, initialCutY);
+      if (!cutUpsideDown) {
+        // 通常時: 画像の「上側」を切り抜く
+        ctx.moveTo(-renderW * 2, -renderH * 2);
+        ctx.lineTo(renderW * 2, -renderH * 2);
+        ctx.lineTo(renderW * 2, initialCutY);
+        ctx.lineTo(-renderW * 2, initialCutY);
+      } else {
+        // 逆さま時: 画像の「下側」を切り抜く
+        ctx.moveTo(-renderW * 2, renderH * 2);
+        ctx.lineTo(renderW * 2, renderH * 2);
+        ctx.lineTo(renderW * 2, initialCutY);
+        ctx.lineTo(-renderW * 2, initialCutY);
+      }
       ctx.closePath();
       ctx.restore();
 
-      ctx.clip(); // クリップ実行
+      ctx.clip();
 
-      // 2. 移動・回転させて半透明で描画
-      ctx.globalAlpha = 0.65;
+      // 2. 半透明レイヤーの描画（不透明度0.78）
+      ctx.globalAlpha = OVERLAY_OPACITY;
 
       ctx.save();
       ctx.translate(cx + shiftX, cy + shiftY);
       ctx.rotate(((cutRoll * Math.PI) / 180) + dynamicRotate);
       ctx.drawImage(baseCanvas, -renderW / 2, -renderH / 2, renderW, renderH);
 
-      // 3. ティントカラー（薄い色）のオーバーレイ
+      // ティントカラーの重ね合わせ
       if (selectedTint !== 'transparent') {
         ctx.fillStyle = selectedTint;
         ctx.fillRect(-renderW / 2, -renderH / 2, renderW, renderH);
       }
       ctx.restore();
 
-      // クリップ境界の光るエッジライン
+      // 切り口のエッジ発光ライン
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate((cutRoll * Math.PI) / 180);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(-renderW * 2, initialCutY);
@@ -754,81 +813,102 @@
       ctx.restore();
     }
 
-    // --- 現在の浮遊レイヤーを原寸のbaseCanvasに焼き付け（Bake） ---
-    function bakeCurrentOverlay() {
+    // --- 原寸ベースキャンバスへの焼き付け（Bake） ---
+    function bakeOverlay() {
       const scale = baseCanvas.width / renderW;
       const bW = baseCanvas.width;
       const bH = baseCanvas.height;
       const bCx = bW / 2;
       const bCy = bH / 2;
 
-      const initialCutY = (cutPitch / 45) * (renderH * 0.45) * scale;
-      const diffRoll = smoothRoll - cutRoll;
-      const diffPitch = smoothPitch - cutPitch;
-      const shiftX = diffRoll * 4 * scale;
-      const shiftY = diffPitch * 4 * scale;
-      const dynamicRotate = (diffRoll * 0.5 * Math.PI) / 180;
+      const initialCutY = (cutPitch / 45) * (renderH * 0.45) * 0.6 * scale;
+      const diffRoll = (smoothRoll - cutRoll) * 0.6;
+      const diffPitch = (smoothPitch - cutPitch) * 0.6;
+      const shiftX = diffRoll * 3.5 * scale;
+      const shiftY = diffPitch * 3.5 * scale;
+      const dynamicRotate = (diffRoll * 0.4 * Math.PI) / 180;
 
-      // 一時的な合成用キャンバスを作成
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = bW;
       tempCanvas.height = bH;
       const tempCtx = tempCanvas.getContext('2d');
 
-      // クリップ領域作成
+      // クリップ
       tempCtx.save();
       tempCtx.translate(bCx, bCy);
       tempCtx.rotate((cutRoll * Math.PI) / 180);
       tempCtx.beginPath();
-      tempCtx.moveTo(-bW * 2, -bH * 2);
-      tempCtx.lineTo(bW * 2, -bH * 2);
-      tempCtx.lineTo(bW * 2, initialCutY);
-      tempCtx.lineTo(-bW * 2, initialCutY);
+      if (!cutUpsideDown) {
+        tempCtx.moveTo(-bW * 2, -bH * 2);
+        tempCtx.lineTo(bW * 2, -bH * 2);
+        tempCtx.lineTo(bW * 2, initialCutY);
+        tempCtx.lineTo(-bW * 2, initialCutY);
+      } else {
+        tempCtx.moveTo(-bW * 2, bH * 2);
+        tempCtx.lineTo(bW * 2, bH * 2);
+        tempCtx.lineTo(bW * 2, initialCutY);
+        tempCtx.lineTo(-bW * 2, initialCutY);
+      }
       tempCtx.closePath();
       tempCtx.restore();
 
       tempCtx.clip();
 
-      // 移動して描画
-      tempCtx.globalAlpha = 0.65;
+      tempCtx.globalAlpha = OVERLAY_OPACITY;
       tempCtx.save();
       tempCtx.translate(bCx + shiftX, bCy + shiftY);
       tempCtx.rotate(((cutRoll * Math.PI) / 180) + dynamicRotate);
       tempCtx.drawImage(baseCanvas, -bCx, -bCy, bW, bH);
 
-      // ティントの焼き付け
       if (selectedTint !== 'transparent') {
         tempCtx.fillStyle = selectedTint;
         tempCtx.fillRect(-bCx, -bCy, bW, bH);
       }
       tempCtx.restore();
 
-      // 原本（baseCanvas）へ統合
       baseCtx.drawImage(tempCanvas, 0, 0);
     }
 
-    // --- 高解像度PNG保存 ---
-    function saveImage() {
-      const link = document.createElement('a');
-      link.download = `LevelOverlay_${Date.now()}.png`;
-      link.href = baseCanvas.toDataURL('image/png');
-      link.click();
-      showToast('画像を保存しました');
+    // --- 簡単ワンタップ写真保存（Web Share API ＋ ダイレクトDL） ---
+    async function saveImage() {
+      try {
+        baseCanvas.toBlob(async (blob) => {
+          if (!blob) return;
+          const fileName = `LevelOverlay1_${Date.now()}.png`;
+          const file = new File([blob], fileName, { type: 'image/png' });
+
+          // 1. スマホ向け（iOS Safari / Android Chrome）: 共有シートから写真アプリへ直接保存
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: 'LevelOverlay1 アート',
+                text: 'LevelOverlay1 で作成したアート画像です'
+              });
+              showToast('共有・保存メニューを開きました');
+              return;
+            } catch (err) {
+              if (err.name === 'AbortError') return; // キャンセル時は中断
+            }
+          }
+
+          // 2. PC / 一般ブラウザ向け: ダイレクトダウンロード
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast('画像を保存しました');
+        }, 'image/png');
+      } catch (e) {
+        alert('保存処理に失敗しました: ' + e.message);
+      }
     }
 
-    // --- 初期ロード処理 ---
-    window.addEventListener('DOMContentLoaded', () => {
-      // iOSのパーミッション確認
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        document.getElementById('permission-modal').style.display = 'flex';
-      } else {
-        // Android / PC
-        window.addEventListener('deviceorientation', handleOrientation);
-      }
-      initDefaultImage();
-    });
-
-    // アニメーションループ開始
+    // レンダリングループ開始
     requestAnimationFrame(render);
   </script>
 </body>
